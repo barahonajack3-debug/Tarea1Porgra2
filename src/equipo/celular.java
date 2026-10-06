@@ -8,7 +8,7 @@ package equipo;
  *
  * @author USER
  */
-public class celular extends equipo{
+public class Celular extends Equipo{
     //Atr
     private String sistema_Operativo;
     private String IMEI;
@@ -22,7 +22,7 @@ public class celular extends equipo{
     }
 
     //Constrctor
-    public celular(String codigo, String nombre_Cliente, String maraca) {
+    public Celular(String codigo, String nombre_Cliente, String maraca) {
         super(codigo, nombre_Cliente, maraca);
     }
 

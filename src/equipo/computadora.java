@@ -8,7 +8,7 @@ package equipo;
  *
  * @author USER
  */
-public class computadora extends equipo{
+public class Computadora extends Equipo{
     //Atributos
     private String sistema_Operativo;
     private String tipo_compu; //Portátil o Escritorio
@@ -29,7 +29,7 @@ public class computadora extends equipo{
     }
     
     //Constrctor
-    public computadora(String codigo, String nombre_Cliente, String maraca) {
+    public Computadora(String codigo, String nombre_Cliente, String maraca) {
         super(codigo, nombre_Cliente, maraca);
     }
 

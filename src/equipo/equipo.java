@@ -8,7 +8,7 @@ package equipo;
  *
  * @author USER
  */
-public abstract class equipo {
+public abstract class Equipo {
     //Atributos
     private String codigo;
     private  String nombre_Cliente;
@@ -31,7 +31,7 @@ public abstract class equipo {
     }
     
     //Constructor
-    public equipo(String codigo, String nombre_Cliente, String maraca) {
+    public Equipo(String codigo, String nombre_Cliente, String maraca) {
         this.codigo = codigo;
         this.nombre_Cliente = nombre_Cliente;
         this.maraca = maraca;
