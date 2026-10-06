@@ -12,7 +12,7 @@ public abstract class Equipo {
     //Atr
     private String codigo;
     private  String nombre_Cliente;
-    private  String maraca;
+    private  String marca;
     
     //Metodos get
     public String getCodigo() {
@@ -22,19 +22,25 @@ public abstract class Equipo {
         return nombre_Cliente;
     }
     public String getMaraca() {
-        return maraca;
+        return marca;
     }
     
     //Metodos set
     public void setCodigo(String codigo) {
         this.codigo = codigo;
     }
+    public void setNombre_Cliente(String nombre_Cliente) {
+        this.nombre_Cliente = nombre_Cliente;
+    }
+    public void setMarca(String marca) {
+        this.marca = marca;
+    }
     
     //Constructor
     public Equipo(String codigo, String nombre_Cliente, String maraca) {
         this.codigo = codigo;
         this.nombre_Cliente = nombre_Cliente;
-        this.maraca = maraca;
+        this.marca = maraca;
     }
 
     //Funciones
