@@ -13,8 +13,6 @@ public class Computadora extends Equipo{
     private String sistema_Operativo;
     private String tipo_compu; //Portátil o Escritorio
 
-    
-    
     //Metodos get
     public String getSistema_Operativo() {
         return sistema_Operativo;
@@ -39,4 +37,4 @@ public class Computadora extends Equipo{
         return "El sistema operativo es: "+sistema_Operativo+
              "\nEl tipo de computadora es: "+tipo_compu;
     }  
-}
+} 

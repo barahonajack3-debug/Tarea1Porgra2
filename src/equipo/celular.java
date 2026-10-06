@@ -9,7 +9,7 @@ package equipo;
  * @author USER
  */
 public class Celular extends Equipo{
-    //Atr
+    //Atrr
     private String sistema_Operativo;
     private String IMEI;
     

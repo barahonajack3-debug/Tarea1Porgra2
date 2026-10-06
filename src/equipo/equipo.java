@@ -9,7 +9,7 @@ package equipo;
  * @author USER
  */
 public abstract class Equipo {
-    //Atributos
+    //Atr
     private String codigo;
     private  String nombre_Cliente;
     private  String maraca;
