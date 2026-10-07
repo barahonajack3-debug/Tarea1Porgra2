@@ -25,10 +25,16 @@ public class Computadora extends Equipo{
     public void setSistema_Operativo(String sistema_Operativo) {
         this.sistema_Operativo = sistema_Operativo;
     }
+    public void setTipo_compu(String tipo_compu) {
+        this.tipo_compu = tipo_compu;
+    }
     
     //Constrctor
-    public Computadora(String codigo, String nombre_Cliente, String maraca) {
-        super(codigo, nombre_Cliente, maraca);
+    public Computadora(String codigo, String nombre_Cliente, String marca,
+                   String tipo_compu, String sistema_Operativo) {
+    super(codigo, nombre_Cliente, marca);
+    this.tipo_compu = tipo_compu;
+    this.sistema_Operativo = sistema_Operativo;
     }
 
     //Funciones
