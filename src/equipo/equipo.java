@@ -21,7 +21,7 @@ public abstract class Equipo {
     public String getNombre_Cliente() {
         return nombre_Cliente;
     }
-    public String getMaraca() {
+    public String getMarca() {
         return marca;
     }
     

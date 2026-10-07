@@ -5,7 +5,14 @@
 package vista;
 
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import equipo.Computadora;
+import equipo.Celular;
+import equipo.Equipo;
 import orden_reparacion.OrdenReparacion;
+import servicios.Diagnostico;
+import servicios.Mantenimiento;
+import servicios.Servicio;
 
 /**
  *
@@ -39,11 +46,152 @@ public class FrmVista extends javax.swing.JFrame {
     public int contarOrdenes(){
         return listaOrdenes.size();
     }
+    
+    //Validar los datos antes de registrar
+    private boolean validarDatos() {
+        if (txtNumeroO.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El número de orden debe tener información.");
+            return false;
+        }
+        if (txtCodigoE.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El código del equipo debe tener información.");
+            return false;
+        }
+        if (txtPropietario.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El nombre del propietario debe tener información.");
+            return false;
+        }
+        if (txtMarca.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "La marca debe tener información.");
+            return false;
+        }
+        if (cbxTipoEquipo.getSelectedItem().equals("Seleccione")) {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar el tipo de equipo.");
+            return false;
+        }
+        if (cbxTipoEquipo.getSelectedItem().equals("Computadora")) {
+            if (cbxTipoCompu.getSelectedItem().equals("Seleccione")) {
+                JOptionPane.showMessageDialog(this, "Debe indicar el tipo de computadora.");
+                return false;
+            }
+            if (txtSOComputadora.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "El sistema operativo de la computadora debe tener información.");
+                return false;
+            }
+        } else {
+            if (txtSOCelular.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "El sistema operativo del celular debe tener información.");
+                return false;
+            }
+            if (txtIMEI.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "El IMEI debe tener información.");
+                return false;
+            }
+        }
+        if (cbxServicio.getSelectedItem() == null || cbxOpcion.getSelectedItem() == null) {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar correctamente un servicio.");
+            return false;
+        }
+        return true;
+    }
+    
+    //Registrar una orden
+    private void registrarOrden() {
+        if (!validarDatos()) {
+            return;
+        }
+        String numero = txtNumeroO.getText().trim();
+        if (buscarOrden(numero) != null) {
+            JOptionPane.showMessageDialog(this, "El número de orden " + numero + " ya está registrado.");
+            return;
+        }
+        String codigo = txtCodigoE.getText().trim();
+        String propietario = txtPropietario.getText().trim();
+        String marca = txtMarca.getText().trim();
+        
+        Equipo equipo;
+        if (cbxTipoEquipo.getSelectedItem().equals("Computadora")) {
+            equipo = new Computadora(codigo, propietario, marca,
+                    cbxTipoCompu.getSelectedItem().toString(),
+                    txtSOComputadora.getText().trim());
+        } else {
+            equipo = new Celular(codigo, propietario, marca,
+                    txtSOCelular.getText().trim(),
+                    txtIMEI.getText().trim());
+        }
+        
+        Servicio servicio;
+        if (cbxServicio.getSelectedItem().equals("Diagnostico")) {
+            servicio = new Diagnostico(cbxOpcion.getSelectedItem().toString());
+        } else {
+            servicio = new Mantenimiento(cbxOpcion.getSelectedItem().toString());
+        }
+        
+        OrdenReparacion orden = new OrdenReparacion(numero, equipo, servicio,
+                txtObservaciones.getText().trim());
+        agregarOrden(orden);
+        actualizarLista();
+        actualizarCantidad();
+        JOptionPane.showMessageDialog(this, "La orden " + numero + " fue registrada correctamente.");
+    }
+    
+    //Mostrar las órdenes en el JTextArea
+    private void actualizarLista() {
+        String texto = "";
+        for (OrdenReparacion orden : listaOrdenes) {
+            String tipoEquipo;
+            if (orden.getEquipo() instanceof Computadora) {
+                tipoEquipo = "Computadora";
+            } else {
+                tipoEquipo = "Celular";
+            }
+            texto += orden.getNumero_Orden() + " | " + orden.getPropietario()
+                    + " | " + tipoEquipo + " | " + orden.getServicio().nombre_Servicio()
+                    + " | ₡" + (int) orden.getCosto() + "\n";
+        }
+        jTextArea1.setText(texto);
+    }
+    
+    //Actualizar la cantidad de órdenes
+    private void actualizarCantidad() {
+        lblCantidad.setText("Cantidad de ordenes: " + contarOrdenes());
+    }
+    
+    //Calcular el costo según el servicio y la opción seleccionada
+    private void actualizarCosto() {
+        Servicio servicio;
+        if (cbxServicio.getSelectedItem().equals("Diagnostico")) {
+            servicio = new Diagnostico(cbxOpcion.getSelectedItem().toString());
+        } else {
+            servicio = new Mantenimiento(cbxOpcion.getSelectedItem().toString());
+        }
+        lblCosto.setText("Costo : ₡" + (int) servicio.costo_Servicio());
+    }
+    
+    //Limpiar los campos del formulario
+    private void limpiarCampos() {
+        txtNumeroO.setText("");
+        txtCodigoE.setText("");
+        txtPropietario.setText("");
+        txtMarca.setText("");
+        txtSOComputadora.setText("");
+        txtSOCelular.setText("");
+        txtIMEI.setText("");
+        txtObservaciones.setText("");
+        txtBuscarNumero.setText("");
+        cbxTipoEquipo.setSelectedIndex(0);
+        cbxTipoCompu.setSelectedIndex(0);
+        cbxServicio.setSelectedIndex(0);
+        cbxOpcion.setSelectedIndex(0);
+        actualizarCosto();
+    }
     /**
      * Creates new form FrmVista
      */
     public FrmVista() {
         initComponents();
+        jTextArea1.setEditable(false);
+        actualizarCosto();
     }
 
     /**
@@ -135,7 +283,7 @@ public class FrmVista extends javax.swing.JFrame {
 
         jLabel11.setText("Tipo :");
 
-        cbxTipoCompu.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione", "Portatil", "Escritorio" }));
+        cbxTipoCompu.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione", "Portátil", "Escritorio" }));
 
         jLabel13.setText("S.O :");
 
@@ -222,6 +370,9 @@ public class FrmVista extends javax.swing.JFrame {
         cbxServicio.addActionListener(this::cbxServicioActionPerformed);
 
         jLabel16.setText("Opción :");
+
+        cbxOpcion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Normal", "Avanzado" }));
+        cbxOpcion.addActionListener(this::cbxOpcionActionPerformed);
 
         lblCosto.setText("Costo : ₡ 0");
 
@@ -476,15 +627,32 @@ public class FrmVista extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnRegistraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistraActionPerformed
-        // TODO add your handling code here:
+        registrarOrden();
     }//GEN-LAST:event_btnRegistraActionPerformed
 
     private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
-        // TODO add your handling code here:
+        limpiarCampos();
     }//GEN-LAST:event_btnLimpiarActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-        // TODO add your handling code here:
+        String numero = txtBuscarNumero.getText().trim();
+        if (numero.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Ingrese el número de orden a buscar.");
+            return;
+        }
+        OrdenReparacion orden = buscarOrden(numero);
+        if (orden == null) {
+            JOptionPane.showMessageDialog(this, "El número de orden " + numero + " no se encuentra registrado.");
+            return;
+        }
+        String mensaje = "Número de orden: " + orden.getNumero_Orden()
+                + "\nPropietario: " + orden.getPropietario()
+                + "\nEquipo:\n" + orden.getEquipo().obtenerDescripcion()
+                + "\nServicio: " + orden.getServicio().nombre_Servicio()
+                + "\nDescripción del servicio:\n" + orden.getServicio().descripcion_Ser()
+                + "\nCosto: ₡" + (int) orden.getCosto()
+                + "\nObservaciones: " + orden.getObservaciones();
+        JOptionPane.showMessageDialog(this, mensaje);
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void cbxServicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxServicioActionPerformed
@@ -495,7 +663,12 @@ public class FrmVista extends javax.swing.JFrame {
         cbxOpcion.setModel(new javax.swing.DefaultComboBoxModel<>(
             new String[]{"Normal", "Con limpieza interna profunda"}));
         }
+        actualizarCosto();
     }//GEN-LAST:event_cbxServicioActionPerformed
+
+    private void cbxOpcionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxOpcionActionPerformed
+        actualizarCosto();
+    }//GEN-LAST:event_cbxOpcionActionPerformed
 
     /**
      * @param args the command line arguments
